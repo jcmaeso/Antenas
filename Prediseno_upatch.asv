@@ -1,0 +1,28 @@
+fmin = 7.25e9;
+fmax = 8.4e9;
+freqRange = (7022.7:78.03:8583.3) * 1e6;
+f0 = sqrt(fmin*fmax);
+lambda = 3e8/f0;
+%Material TLY-3
+Er = 2.23;
+h = 0.1588; %cm
+
+W = (30/(2*f0/1e9))*sqrt(2/(Er+1)); %cm
+Eeff = (Er+1)/2 + ((Er-1)/2)*(1/sqrt(1+12*(h/W)));
+Wh = W/h;
+IncL = h*0.412*(((Eeff+0.3)*(Wh+0.264))/((Eeff-0.258)*(Wh+0.8))); %cm
+Leff = 3e8/(2*sqrt(Eeff)*f0)*100;
+L = Leff - 2*IncL; %cm
+L = L/100; %m
+%Antenna
+p = pcbStack;
+r1 = antenna.Rectangle('Center',[0,0],'Length',L,'Width',L);
+d1 = dielectric("Name","Taconic TLY-3","EpsilonR",2.33,"LossTangent",0.0051,"Thickness",0.00152);
+d1 = dielectric("Name","Taconic TLY-3","EpsilonR",2.33,"LossTangent",0.0051,"Thickness",0.00152);
+boardShape = antenna.Rectangle('Length',0.03,'Width',0.03);
+BoardShape = boardShape;
+p.Layers = {p.Layers{1},d1,d2,p.Layers{2}};
+p.FeedDiameter = .02*lambda/2;
+p.FeedLocations = [0 0 1];
+figure
+show(p)

@@ -4,26 +4,16 @@ f0 = sqrt(fmin*fmax);
 
 %Material TLY-3
 Er = 2.33;
-h = 1.52;
+h = 0.1588; %cm
 
 %Diseno Antena
-F = 8.791e9/(f0*Er);
-a = F/sqrt(1+ 2*h*log(1.7726+pi*F/(2*h))/(pi*Er*F));
+F = 8.791e9/(f0*sqrt(Er));
+a = F/sqrt(1+ 2*h*log(1.7726+pi*F/(2*h))/(pi*Er*F)); %cm
 
-%Circular Antenna
-cp = patchMicrostripCircular
-cp.Radius = a;
-cp.Substrate = dielectric('Taconic TLY-3');
-cp.GroundPlaneLength = 1;
-cp.GroundPlaneWidth = 1;
-
-figure(1);
-show(cp);
-figure(2);
-pattern(cp, f0);
-figure(3);
-
-
-
+cp = patchMicrostripCircular;
+cp.Radius = a/100;
+cp.Heigth = h/100;
+cp.FeedOffset = [0 0.002];
+cp.Substrate  dielectric("Name","Taconic TLY-3","EpsilonR",2.33,"LossTangent",0.0051,"Thickness",0.00152)
 
 

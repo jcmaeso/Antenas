@@ -1,6 +1,7 @@
 fmin = 7.25e9;
 fmax = 8.4e9;
 freqRange = (7022.7:78.03:8583.3) * 1e6;
+freqRange = linspace(5e9,10e9,500);
 f0 = sqrt(fmin*fmax);
 
 %Material TLY-3
@@ -22,6 +23,19 @@ cp.Substrate = dielectric("Name",'TLY-3',"EpsilonR",2.33,"LossTangent",0.0051,"T
 %Antena Plot
 figure(1);
 show(cp) 
+
+p = pcbStack;
+rl = antenna.Circle('Center',[0,0],'Radius',a/100);
+rm = antenna.Rectangle('Center',[0,0],'Length',0.0342,'Width',0.0342);
+p.BoardThickness = 0.001588*2;
+p.BoardShape = rm;
+d1 = dielectric();
+d1.Thickness = 0.001588;
+d1.EpsilonR = 2.33;
+d1.LossTangent = 0.00051;
+p.Layers = {rl,d1,rl,d1,rm};
+p.FeedLocations = [0 0 3 5];
+show(p)
 figure(2);
-s = sparameters(cp, freqRange); 
+s = sparameters(p, freqRange); 
 rfplot(s) 
